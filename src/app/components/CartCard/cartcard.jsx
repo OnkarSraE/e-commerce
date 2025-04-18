@@ -8,10 +8,11 @@ import { useDispatch } from 'react-redux';
 import { RemoveItem } from '../../../../redux/cartSlice';
 
 function CartCard({ name, price, image, id }) {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch(); // get dispatch function
 
   return (
     <div className={styles.CartCard}>
+      {/* Left side: product image and details */}
       <div className={styles.leftCard}>
         <Image src={image} alt={name} width={100} height={100} />
         <div className={styles.namePrice}>
@@ -19,9 +20,11 @@ function CartCard({ name, price, image, id }) {
           <span className={styles.price}>${price}/-</span>
         </div>
       </div>
+
+      {/* Right side: remove button */}
       <div className={styles.rightCard}>
         <button onClick={() => dispatch(RemoveItem(id))}>
-          <RiDeleteBin6Line />
+          <RiDeleteBin6Line /> {/* triggers Redux action to remove this item */}
         </button>
       </div>
     </div>

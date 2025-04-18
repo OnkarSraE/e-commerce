@@ -4,11 +4,13 @@ import styles from './contact.module.css';
 function Contact() {
   return (
     <div className={styles.contact}>
-      <form 
-        action="https://formspree.io/f/xzzzbvnl" 
-        method="POST" 
+      {/* Form sends submission to Formspree endpoint */}
+      <form
+        action="https://formspree.io/f/xzzzbvnl"
+        method="POST"
         className={styles.form}
       >
+        {/* User name input */}
         <input
           type="text"
           placeholder="Your Name"
@@ -16,6 +18,7 @@ function Contact() {
           required
           className={styles.input}
         />
+        {/* Email input */}
         <input
           type="email"
           placeholder="Email Address"
@@ -23,12 +26,14 @@ function Contact() {
           required
           className={styles.input}
         />
+        {/* Message textarea */}
         <textarea
           name="message"
           placeholder="Your Message"
           required
           className={`${styles.input} ${styles.textarea}`}
         ></textarea>
+        {/* Submit button */}
         <button type="submit" className={styles.button}>
           Send Message
         </button>
