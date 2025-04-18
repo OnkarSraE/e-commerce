@@ -8,35 +8,37 @@ import { dummydata } from "../dummydata";
 import Product from "../components/product/product";
 
 function Shop() {
-  // state holding products to display
-  const [cate, setCate] = useState(dummydata);
+  const searchParams = useSearchParams();
+  const rawCategory = searchParams.get("category") || ""; // get the category query
+  
+  const [cate, setCate] = useState(dummydata); // state for filtered products
 
-  // show all products if "All" selected, otherwise filter by category
+  // filter function: show all if empty or 'all', else case-insensitive match
   function filterProducts(selectedCategory) {
-    if (selectedCategory === 'All') {
+    const cat = (selectedCategory || "").trim().toLowerCase();
+    if (!cat || cat === "all") {
       setCate(dummydata);
     } else {
       const updatedData = dummydata.filter(
-        (item) => item.category === selectedCategory
+        (item) => item.category.toLowerCase() === cat
       );
       setCate(updatedData);
     }
   }
 
-  // click handler invokes filtering
-  const handleFilterProducts = (item) => {
-    filterProducts(item.name);
-  };
+  // apply filter when URL query changes
+  useEffect(() => {
+    filterProducts(rawCategory);
+  }, [rawCategory]);
 
   return (
     <div className={styles.shop}>
       <div className={styles.categorySection}>
-        {/* render all categories */}
         {category.map((item) => (
           <div
             key={item.name}
             className={styles.categoryCard}
-            onClick={() => handleFilterProducts(item)}
+            onClick={() => filterProducts(item.name)} // filter by clicking category
           >
             <Image
               src={item.image}
@@ -44,24 +46,29 @@ function Shop() {
               width={100}
               height={100}
             />
-            {item.name}
+            {item.name} {/* display category name */}
           </div>
         ))}
       </div>
 
-      <div className={styles.productSection}>
-        {/* display filtered products */}
-        {cate.map((item) => (
-          <div key={item.id} className={styles.productCard}>
-            <Product
-              name={item.name}
-              price={item.price}
-              image={item.image}
-              id={item.id}
-            />
-          </div>
-        ))}
-      </div>
+      {cate.length > 0 ? (
+        <div className={styles.productSection}>
+          {cate.map((item) => (
+            <div key={item.id} className={styles.productCard}>
+              <Product
+                name={item.name}
+                price={item.price}
+                image={item.image}
+                id={item.id}
+              />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className={styles.noResults}>
+          No results found for “{rawCategory}” {/* message when no matches */}
+        </div>
+      )}
     </div>
   );
 }
